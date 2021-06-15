@@ -1,0 +1,28 @@
+{
+  "en" : {
+    "getLanguage" : "What language do you speak?",
+    "invalidLanguage" : "This language is not supported. Please enter 'en' or 'es'.",
+    "welcome" : "Welcome to the Calculator!",
+    "getNumber1" : "What is the first number?",
+    "getNumber2" : "What is the second number?",
+    "getOperation" : "What operation would you like to perform?\n1) Add\n2) Subtract\n3) Multiply\n4) Divide",
+    "invalidNumber" : "Hmm... that doesn't look like a valid number",
+    "invalidOperation" : "Must choose 1, 2, 3, or 4.",
+    "continue" : "Would you like to perform another calculation?\n1) Yes\n2) No",
+    "invalidContinue" : "Must choose 1 or 2.",
+    "result" : "The result is:"
+  },
+  "es" : {
+    "getLanguage" : "¿Qué idioma hablas?",
+    "invalidLanguage" : "Este idioma no es compatible. Por favor ingrese 'es' o 'es'.",
+    "welcome" : "¡Bienvenido a la calculadora!",
+    "getNumber1" : "¿Cuál es el primer número?",
+    "getNumber2" : "¿Cuál es el segundo número?",
+    "getOperation" : "¿Qué operación te gustaría realizar?\n1) Agregar\n2) Sustraer\n3) Multiplicar\n4) Dividir",
+    "invalidNumber" : "Hmm... que no parece un número válido",
+    "invalidOperation" : "Debe elegir 1, 2, 3 o 4.",
+    "continue" : "¿Te gustaría realizar otro cálculo?\n1) Sí\n2) No",
+    "invalidContinue" : "Debe elegir 1 o 2.",
+    "result" : "El resultado es:"
+  }
+}

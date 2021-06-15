@@ -1,0 +1,14 @@
+{
+  "welcome" : "Welcome to the Mortgage Calculator!",
+  "getLoanAmount" : "Please enter your loan amount:",
+  "invalidAmount" : "Invalid Amount. Please enter a valid loan amount.\n   Your loan amount should be a decimal number greater than or equal to 0.",
+  "getLoanAPR" : "Please enter your Annual Percentage Rate (APR) as a percentage:\n   For example: 5%",
+  "invalidAPR" : "Invalid APR. Please enter a valid APR.",
+  "getLoanDuration" : "Please enter your loan duration in years:",
+  "invalidDuration" : "Invalid duration. Please enter your loan duration as a decimal number in years.\n   The minimum duration is 0.0833̄ year.",
+  "printAmount" : "Loan amount: $",
+  "printAPR" : "Annual Percentage Rate (APR): ",
+  "printDuration" : "Loan duration: ",
+  "printPayment" : "Monthly payment: $",
+  "continue" : "Would you like to perform another calculation?\n   Please enter 'yes' or 'no'."
+}
