@@ -1,5 +1,6 @@
 const READLINE = require('readline-sync');
 const MESSAGES = require('./mortgage_messages.json');
+const MONTHS_IN_YEAR = 12;
 
 // Program messages
 function prompt(key, append = '') {
@@ -67,7 +68,7 @@ function invalidNumEntry(entry) {
 }
 
 function invalidDuration(duration) {
-  return duration < 1 / 12;  // Duration must be greater than 1 month
+  return duration < 1 / MONTHS_IN_YEAR;
 }
 
 // Data Cleansing
@@ -83,11 +84,11 @@ function cleanse(value) {
 
 // Calculations
 function calculateMonthlyRate(annualRate) {
-  return annualRate / (12 * 100);  // Convert to monthly and decimal rate
+  return annualRate / (MONTHS_IN_YEAR * 100);
 }
 
 function yearsToMonths(years) {
-  return years * 12;
+  return years * MONTHS_IN_YEAR;
 }
 
 function calculatePayment(amount, annualRate, loanDurationYears) {
