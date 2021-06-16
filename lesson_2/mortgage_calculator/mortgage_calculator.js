@@ -11,7 +11,7 @@ function displayResults(loanAmount, annualRate, loanDurationYears,
   paymentMonthly) {
   prompt('printAmount', `${loanAmount.toFixed(2)}`);
   prompt('printAPR', `${annualRate.toFixed(2)}%`);
-  prompt('printDuration', `${loanDurationYears.toFixed(2)} years\n`);
+  prompt('printDuration', `${loanDurationYears.toFixed(0)} years\n`);
   prompt('printPayment', `${paymentMonthly.toFixed(2)} \n`);
 }
 
@@ -54,11 +54,16 @@ function getLoanDurationYears() {
   return cleanse(loanDurationYears);
 }
 
-function getRun() {
+function askToCalculateAgain() {
   prompt('continue');
-  let run = READLINE.question().trim().toLowerCase();
+  let answer = READLINE.question().trim().toLowerCase();
 
-  return (run === 'yes') || (run === 'y');
+  while (answer !== "y" && answer !== "n") {
+    prompt('invalidContinue');
+    answer = READLINE.question().toLowerCase();
+  }
+
+  return (answer === 'y');
 }
 
 // Input Validation
@@ -68,7 +73,8 @@ function invalidNumEntry(entry) {
 }
 
 function invalidDuration(duration) {
-  return duration < 1 / MONTHS_PER_YEAR;
+  return !Number.isInteger(Number(duration)) ||
+    Number(duration) < 1;
 }
 
 // Data Cleansing
@@ -115,4 +121,4 @@ do {
 
   displayResults(loanAmount, annualRate, loanDurationYears, paymentMonthly);
 
-} while (getRun());
+} while (askToCalculateAgain());
