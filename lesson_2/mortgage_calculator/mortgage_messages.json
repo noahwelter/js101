@@ -5,10 +5,11 @@
   "getLoanAPR" : "Please enter your Annual Percentage Rate (APR) as a percentage:\n   For example: 5%",
   "invalidAPR" : "Invalid APR. Please enter a valid APR.",
   "getLoanDuration" : "Please enter your loan duration in years:",
-  "invalidDuration" : "Invalid duration. Please enter your loan duration as a decimal number in years.\n   The minimum duration is 0.0833̄ year.",
+  "invalidDuration" : "Invalid duration. Please enter your loan duration as an integer in years.\n   The minimum duration is 1 year.",
   "printAmount" : "Loan amount: $",
   "printAPR" : "Annual Percentage Rate (APR): ",
   "printDuration" : "Loan duration: ",
   "printPayment" : "Monthly payment: $",
-  "continue" : "Would you like to perform another calculation?\n   Please enter 'yes' or 'no'."
+  "continue" : "Would you like to perform another calculation? (y/n)",
+  "invalidContinue" : "Please enter 'y' or 'n'."
 }
