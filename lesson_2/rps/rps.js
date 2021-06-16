@@ -20,15 +20,28 @@ function prompt(message) {
   console.log(`>> ${message}`);
 }
 
-function displayGameWinner(userChoice, computerChoice, scoreArray) {
+function displayWelcome() {
   console.clear();
+  prompt(`Welcome to ${Object.keys(VICTORY_TABLE).join(', ').toUpperCase()}.\n   First to ${SCORE_TO_WIN} wins!\n`);
+  displayRules();
+}
+
+function displayRules() {
+  prompt('Rules:\n');
+  for (const choice in VICTORY_TABLE) {
+    console.log(`   ${choice.toUpperCase()} beats ${VICTORY_TABLE[choice].join(', ').toUpperCase()}`);
+  }
+  console.log();
+}
+
+function displayGameWinner(userChoice, computerChoice, scoreArray) {
   prompt(`${NAME_TABLE[USER_INDEX]} chose ${userChoice}. ${NAME_TABLE[COMPUTER_INDEX]} chose ${computerChoice}.\n\n   ${NAME_TABLE[USER_INDEX]}: ${scoreArray[USER_INDEX]}\n   ${NAME_TABLE[COMPUTER_INDEX]}: ${scoreArray[COMPUTER_INDEX]}\n`);
 }
 
 function displayMatchWinner(scoreArray, matchWinnerIndex) {
   let winnerName = NAME_TABLE[matchWinnerIndex];
 
-  prompt(`${winnerName} won! The final score was:\n   ${NAME_TABLE[USER_INDEX]}: ${scoreArray[USER_INDEX]}\n   ${NAME_TABLE[COMPUTER_INDEX]}: ${scoreArray[COMPUTER_INDEX]}\n`);
+  prompt(`${winnerName} won! The final score was:\n\n   ${NAME_TABLE[USER_INDEX]}: ${scoreArray[USER_INDEX]}\n   ${NAME_TABLE[COMPUTER_INDEX]}: ${scoreArray[COMPUTER_INDEX]}\n`);
 }
 //#endregion
 
@@ -59,12 +72,12 @@ function askContinuetoPlay() {
   prompt("Would you like to play again? (y/n)");
   let answer = readLine.question().toLowerCase();
 
-  while (answer[0] !== "y" && answer[0] !== "n") {
+  while (answer !== "y" && answer !== "n") {
     prompt("Please enter 'y' or 'n'.");
     answer = readLine.question().toLowerCase();
   }
 
-  return (answer[0] === 'y');
+  return (answer === 'y');
 }
 //#endregion
 
@@ -100,8 +113,8 @@ function getIntendedMatchChoice(userChoice) {
   if (matchArray.length === 1) {
     return matchArray[0];
   } else {
-    console.log('');
-    prompt(`There are multiple choices that match '${userChoice}'. Which did you intend?\n   Enter the number from the list below:\n`);
+    console.log();
+    prompt(`There are multiple choices that match '${userChoice}'. Which did you intend?\n   Enter a number from the list below:\n`);
 
     matchArray.forEach((match, index) => console.log(`   ${index + 1}. ${match}`));
 
@@ -146,9 +159,14 @@ do {
   let matchWinnerIndex;
   let scoreArray = [0, 0, 0];
 
+  displayWelcome();
+
   while (matchWinnerIndex !== 1 && matchWinnerIndex !== 2) {
     let userChoice = getUserChoice();
     let computerChoice = getComputerChoice();
+
+    console.clear();
+    displayRules();
 
     let gameWinnerIndex = computeGameWinnerIndex(userChoice, computerChoice);
     updateScore(scoreArray, gameWinnerIndex);
