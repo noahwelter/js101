@@ -158,12 +158,12 @@ function computeMatchWinnerIndex(scoreArray) {
 
 //#region Main
 do {
-  let matchWinnerIndex;
+  let matchWinnerIndex = -1;
   let scoreArray = [0, 0, 0];
 
   displayWelcome();
 
-  while (matchWinnerIndex !== 1 && matchWinnerIndex !== 2) {
+  while (matchWinnerIndex < 1) {
     let userChoice = getUserChoice();
     let computerChoice = getComputerChoice();
 
