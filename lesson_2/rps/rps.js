@@ -21,6 +21,7 @@ function prompt(message) {
 }
 
 function displayGameWinner(userChoice, computerChoice, scoreArray) {
+  console.clear();
   prompt(`${NAME_TABLE[USER_INDEX]} chose ${userChoice}. ${NAME_TABLE[COMPUTER_INDEX]} chose ${computerChoice}.\n\n   ${NAME_TABLE[USER_INDEX]}: ${scoreArray[USER_INDEX]}\n   ${NAME_TABLE[COMPUTER_INDEX]}: ${scoreArray[COMPUTER_INDEX]}\n`);
 }
 
@@ -99,6 +100,7 @@ function getIntendedMatchChoice(userChoice) {
   if (matchArray.length === 1) {
     return matchArray[0];
   } else {
+    console.log('');
     prompt(`There are multiple choices that match '${userChoice}'. Which did you intend?\n   Enter the number from the list below:\n`);
 
     matchArray.forEach((match, index) => console.log(`   ${index + 1}. ${match}`));
