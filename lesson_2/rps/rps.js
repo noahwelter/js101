@@ -58,6 +58,8 @@ function getUserChoice() {
     userChoice = getIntendedChoice(userChoice);
   }
 
+  console.clear();
+
   return userChoice;
 }
 
@@ -165,7 +167,6 @@ do {
     let userChoice = getUserChoice();
     let computerChoice = getComputerChoice();
 
-    console.clear();
     displayRules();
 
     let gameWinnerIndex = computeGameWinnerIndex(userChoice, computerChoice);
