@@ -1,11 +1,7 @@
 //#region Constants
 const readLine = require('readline-sync');
 
-const TIE_INDEX = 0;
-const USER_INDEX = 1;
-const COMPUTER_INDEX = 2;
 const SCORE_TO_WIN = 3;
-const NAME_TABLE = ["Tie", "You", "Computer"];
 const VICTORY_TABLE = {
   rock: ['lizard', 'scissors'],
   paper: ['rock', 'spock'],
@@ -34,14 +30,14 @@ function displayRules() {
   console.log();
 }
 
-function displayGameWinner(userChoice, computerChoice, scoreArray) {
-  prompt(`${NAME_TABLE[USER_INDEX]} chose ${userChoice}. ${NAME_TABLE[COMPUTER_INDEX]} chose ${computerChoice}.\n\n   ${NAME_TABLE[USER_INDEX]}: ${scoreArray[USER_INDEX]}\n   ${NAME_TABLE[COMPUTER_INDEX]}: ${scoreArray[COMPUTER_INDEX]}\n`);
+function displayGameWinner(userChoice, computerChoice, score) {
+  prompt(`You chose ${userChoice}. Computer chose ${computerChoice}.\n\n   You: ${score.user}\n   Computer: ${score.computer}\n`);
 }
 
-function displayMatchWinner(scoreArray, matchWinnerIndex) {
-  let winnerName = NAME_TABLE[matchWinnerIndex];
+function displayMatchWinner(score, winnerKey) {
+  let winnerName = winnerKey;
 
-  prompt(`${winnerName} won! The final score was:\n\n   ${NAME_TABLE[USER_INDEX]}: ${scoreArray[USER_INDEX]}\n   ${NAME_TABLE[COMPUTER_INDEX]}: ${scoreArray[COMPUTER_INDEX]}\n`);
+  prompt(`${winnerName} won! The final score was:\n\n   You: ${score.user}\n   Computer: ${score.computer}\n`);
 }
 //#endregion
 
@@ -137,46 +133,51 @@ function calculateStringIndex(stringIndex) {
   return String(Number(stringIndex) - 1);
 }
 
-function computeGameWinnerIndex(userChoice, computerChoice) {
+function computeGameWinnerKey(userChoice, computerChoice) {
   if (userChoice === computerChoice) {
-    return TIE_INDEX;
+    return 'tie';
   } else if (VICTORY_TABLE[userChoice].includes(computerChoice)) {
-    return USER_INDEX;
+    return 'user';
   } else {
-    return COMPUTER_INDEX;
+    return 'computer';
   }
 }
 
-function updateScore(scoreArray, winStatus) {
-  scoreArray[winStatus] += 1;
+function updateScore(score, winnerKey) {
+  score[winnerKey] += 1;
 }
 
-function computeMatchWinnerIndex(scoreArray) {
-  return scoreArray.indexOf(SCORE_TO_WIN, USER_INDEX);
+function computeMatchWinner(score, winnerKey) {
+  return score[winnerKey] === SCORE_TO_WIN;
 }
 //#endregion
 
 //#region Main
 do {
-  let matchWinnerIndex = -1;
-  let scoreArray = [0, 0, 0];
+  let matchWon = false;
+  let winnerKey = '';
+  let score = {
+    user: 0,
+    computer: 0,
+    tie: 0
+  };
 
   displayWelcome();
 
-  while (matchWinnerIndex < 1) {
+  while (!matchWon) {
     let userChoice = getUserChoice();
     let computerChoice = getComputerChoice();
 
     displayRules();
 
-    let gameWinnerIndex = computeGameWinnerIndex(userChoice, computerChoice);
-    updateScore(scoreArray, gameWinnerIndex);
+    winnerKey = computeGameWinnerKey(userChoice, computerChoice);
+    updateScore(score, winnerKey);
 
-    matchWinnerIndex = computeMatchWinnerIndex(scoreArray);
-    displayGameWinner(userChoice, computerChoice, scoreArray);
+    matchWon = computeMatchWinner(score, winnerKey);
+    displayGameWinner(userChoice, computerChoice, score);
   }
 
-  displayMatchWinner(scoreArray, matchWinnerIndex);
+  displayMatchWinner(score, winnerKey);
 
 } while (askContinuetoPlay());
 //#endregion
