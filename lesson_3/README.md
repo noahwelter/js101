@@ -190,3 +190,46 @@
     ```
 
     Calling `foo` always returns `'yes'`. Function `bar` has a default value for `param` of `'no'`, however it is passed `'yes'` by the return value of `foo`. The ternary operator expression evaluates to `false` and returns `'no'`.
+
+## Hard 1
+
+1. No - a semicolon will be inserted immediatly after `return` in function `second` and any code after this point will be ignored. `first` returns the object, while `second` returns `undefined`.
+
+2. `numArray` references points to the array linked to the `first` property. Because of this, mutating `numArray` using `push` will change the original `first` array.
+
+   ```js
+   { first: [1, 2] }
+   ```
+
+3. 1. After reassignment, the function parameters point to different memory locations. This does not impact the arrays passed as arguments.
+      ```js
+      one is: one
+      two is: two
+      three is: three
+      ```
+
+   2. The function parameters are assigned to new arrays and do not mutate the arrays passed as arguments.
+      ```js
+      one is: one
+      two is: two
+      three is: three
+      ```
+
+   3. The function parameters point to the arrays passed as arguments, and `splice` mutates the object.
+      ```js
+      one is: two
+      two is: three
+      three is: one
+      ```
+   
+   _Note_: Arrays in template literals are converted to string representation using `.toString()` method. This means that arrays (with multiple elements) flattened/joined with commas.
+
+4. ```js
+   function isDotSeparatedIpAddress(inputString) {
+     let dotSeparatedWords = inputString.split(".");
+     let length = dotSeparatedWords.length;
+
+     return (dotSeparatedWords.every(word => isAnIpNumber(word))
+       && length === 4);
+   }
+   ```
