@@ -132,3 +132,61 @@
    // refactored:
    const isColorValid = color => ['blue', 'green'].includes(color);
    ```
+
+## Medium 1
+
+1. ```js
+   let msg = 'The Flintstones Rock!'
+   for (let i = 0; i < 10; i += 1) {
+     console.log(msg.padStart(i + msg.length));
+   }
+   ```
+
+2. ```js
+   let munstersDescription = "The Munsters are creepy and spooky.";
+
+   // Option 1
+   let flipped = munstersDescription.split('').map(letter => letter === letter.toUpperCase() ? letter.toLowerCase() : letter.toUpperCase()).join('');
+   ```
+
+3. ```js
+   function factors(number) {
+     let divisor = number;
+     let factors = [];
+
+     while (divisor > 0) {
+       if (number % divisor === 0) {
+         factors.push(number / divisor);
+       }
+       divisor -= 1;
+     }
+     
+     return factors;
+   }
+   ```
+
+   Replacing `factors.push(number / divisor)` with `factors.push(divisor)` will return the array with the factors ordered largest to smallest instead of smallest to largest.
+
+   _Bonus:_ `number % divisor === 0` is `true` when the remainder of `number / divisor` is 0. This indicates that `divisor` is a factor of `number`.
+
+4. Yes - `buffer.push(newElement)` will mutate the array argument. `buffer.concat(newElement)` will return a new array object and will not mutate the array argument, but instead reassign buffer to the new array object.
+
+5. Due to how decimal values are converted to binary values, `0.3 + 0.6` may evaluate to something close to but not exactly `0.9`. Because of this, `console.log(0.3 + 0.6 === 0.9)` will return `false`.
+
+6. `NaN === NaN` will return `false`. Use `Number.isNaN(nanArray[0])` instead.
+
+7. `answer` is not mutated by the function `messWithIt`, so `console.log(answer - 8)` prints `34`.
+
+8. Yes - the object passed as an argument is mutated due to being passed by reference.
+
+9. ```js
+   'paper'
+   ```
+
+   The individual `rps()` function calls are performed starting from the innermost calls.
+
+10. ```js
+    'no'
+    ```
+
+    Calling `foo` always returns `'yes'`. Function `bar` has a default value for `param` of `'no'`, however it is passed `'yes'` by the return value of `foo`. The ternary operator expression evaluates to `false` and returns `'no'`.
