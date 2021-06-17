@@ -47,7 +47,7 @@
 ## Easy 2
 
 1. ```js
-   advice.replace('important', 'urgent');
+   advice.replaceAll('important', 'urgent');
    ```
 
 2. ```js
@@ -97,3 +97,38 @@
     statement1.match(/[t]/g).length;  // 2
     statement2.split('').filter(letter => letter === 't').length;  // 0
     ```
+
+## Easy 3
+
+1. ```js
+   numbers.splice(0);
+
+   while (numbers.length) {
+     numbers.pop();
+   }
+
+   while (numbers.length) {
+     numbers.shift();
+   }
+
+   numbers.length = 0;
+   ```
+
+2. ```js
+   1, 2, 34, 5
+   ```
+
+3. ```js
+   hello there
+   ```
+
+4. ```js
+   [{ first: 42 }, { second: "value2" }, 3, 4, 5];  // Shallow copy only duplicates outermost values (duplicate objects in array point to same memory location)
+   ```
+
+5. ```js
+   return (color === "blue" || color === "green");
+
+   // refactored:
+   const isColorValid = color => ['blue', 'green'].includes(color);
+   ```
