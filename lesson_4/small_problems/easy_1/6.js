@@ -4,9 +4,32 @@
 // Output:
 //   - result
 
+// If input nums were an array:
+// result = nums.reduce((accumulator, val) => accumulator *= OR += val);
+
 const readLine = require('readline-sync');
-let result = 0;
+let result;
 let operation = '';
+
+function computeSum(num) {
+  let result = 0;
+
+  for (let currentNum = 1; currentNum <= num; currentNum += 1) {
+    result += currentNum;
+  }
+
+  return result;
+}
+
+function computeProduct(num) {
+  let result = 1;
+
+  for (let currentNum = 1; currentNum <= num; currentNum += 1) {
+    result *= currentNum;
+  }
+
+  return result;
+}
 
 console.log('Please enter an integer greater than 0');
 let num = Number.parseFloat(readLine.question());
@@ -26,18 +49,15 @@ while (operator !== 's' && operator !== 'p') {
   operator = readLine.question();
 }
 
-for (let currentInt = 1; currentInt <= num; currentInt += 1) {
-  switch (operator) {
-    case 's':
-      result += currentInt;
-      operation = 'sum';
-      break;
-    case 'p':
-      result = result || 1;
-      result *= currentInt;
-      operation = 'product';
-      break;
-  }
+switch (operator) {
+  case 's':
+    result = computeSum(num);
+    operation = 'sum';
+    break;
+  case 'p':
+    result = computeProduct(num);
+    operation = 'product';
+    break;
 }
 
 console.log(`The ${operation} of the integers between 1 and ${num} is ${result}.`);
