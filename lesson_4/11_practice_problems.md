@@ -1,11 +1,11 @@
 # 11. Practice Problems
-1. `[1, 2, 3]` - `'hi'` evaluates to `true`, and the implicit return is `true` for each element.
+1. `[1, 2, 3]` - `'hi'` evaluates to `true`, and the implicit return value is `true` for each element.
 
 2. `[undefined, undefined, undefined]` - There is no explicit return value, and so `undefined` is mapped for each element.
 
 3. `[1, 3, 9]` - The implicit return value is the result of `num * num`.
 
-4. `11` - `pop` returns the last element in the array (`caterpillar`). Calling `length` on `ceterpillar` returns `11`.
+4. `11` - `pop` returns the last element in the array (`caterpillar`). The `length` property of `ceterpillar` returns `11`.
 
 5. The callback returns the following because the `num` assignment in every call returns the result of `num * 2`:
    ```js
@@ -47,7 +47,7 @@
       letterObj.hasOwnProperty(letter) ? letterObj[letter] += + 1 : letterObj[letter] = 1;
     });
     ```
-    Solution using short-circuiting shown below. The `letterObj[letter] || 0` expression will either evaluate to the `letterObj[letter]` value if the `letter` property exists, or it will evaluate `0` if the property doesn't exist.
+    Solution using short-circuiting shown below. The `letterObj[letter] || 0` expression will either evaluate to the `letterObj[letter]` value if the `letter` property exists, or it will evaluate to `0` if the property doesn't exist.
     ```js
     let letterObj = {};
     statement.split('').filter(char => char !== ' ').forEach(letter => {
