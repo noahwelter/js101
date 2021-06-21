@@ -35,46 +35,55 @@
 */
 
 const readLine = require('readline-sync');
+const OPERATIONS = ['+', '-', '*', '/', '%', '**'];
 
 function prompt(msg) {
   return `==> ${msg}`;
 }
 
-function print(msg) {
-  console.log(prompt(msg));
+function createMsg(num1, num2, operation) {
+  const OP_TABLE = {
+    '+': (num1, num2) => num1 + num2,
+    '-': (num1, num2) => num1 - num2,
+    '*': (num1, num2) => num1 * num2,
+    '/': (num1, num2) => num1 / num2,
+    '%': (num1, num2) => num1 % num2,
+    '**': (num1, num2) => num1 ** num2
+  };
+
+  return `${num1} ${operation} ${num2} = ${OP_TABLE[operation](num1, num2).toFixed(0)}`;
+
+  //#region  Original approach using switch statement:
+  //  let result = 0;
+
+  // switch (operation) {
+  //   case '+':
+  //     result = num1 + num2;
+  //     break;
+  //   case '-':
+  //     result = num1 - num2;
+  //     break;
+  //   case '*':
+  //     result = num1 * num2;
+  //     break;
+  //   case '/':
+  //     result = num1 / num2;
+  //     break;
+  //   case '%':
+  //     result = num1 % num2;
+  //     break;
+  //   case '**':
+  //     result = num1 ** num2;
+  //     break;
+  // }
+  //#endregion
+}
+
+function print(num1, num2, operation) {
+  console.log(prompt(createMsg(num1, num2, operation)));
 }
 
 let number1 = Number(readLine.question(prompt('Enter the first number:\n')));
 let number2 = Number(readLine.question(prompt('Enter the second number:\n')));
 
-function createMsg(num1, num2, operation) {
-  let result = 0;
-  switch (operation) {
-    case '+':
-      result = num1 + num2;
-      break;
-    case '-':
-      result = num1 - num2;
-      break;
-    case '*':
-      result = num1 * num2;
-      break;
-    case '/':
-      result = num1 / num2;
-      break;
-    case '%':
-      result = num1 % num2;
-      break;
-    case '**':
-      result = num1 ** num2;
-      break;
-  }
-  return `${num1} ${operation} ${num2} = ${result.toFixed(0)}`;
-}
-
-print(createMsg(number1, number2, '+'));
-print(createMsg(number1, number2, '-'));
-print(createMsg(number1, number2, '*'));
-print(createMsg(number1, number2, '/'));
-print(createMsg(number1, number2, '%'));
-print(createMsg(number1, number2, '**'));
+OPERATIONS.forEach(operation => print(number1, number2, operation));
