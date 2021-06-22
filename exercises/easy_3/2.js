@@ -42,14 +42,25 @@
 */
 
 function logInBox(str, length = str.length) {
-  str = str.slice(0, length);
-  let lengthPadded = str.length + 2;
+  if (length > str.length) length = str.length;
+  let lengthPadded = length + 2;
 
   let outer = '+' + '-'.repeat(lengthPadded) + '+';
   let inner = '|' + ' '.repeat(lengthPadded) + '|';
-  let middle = '| ' + str + ' |';
 
-  let box = [outer, inner, middle, inner, outer];
+  let wrappedArray = [];
+
+  for (let row = 0; row < str.length / length; row += 1) {
+    let start = row * length;
+    let end = start + length;
+    let rowLength = str.slice(start, end).length;
+    wrappedArray[row] = '| ' + str.slice(start, end) +
+      (row === Math.floor(str.length / length)
+        ? ' '.repeat(length - rowLength) : '')
+      + ' |';
+  }
+
+  let box = [outer, inner, wrappedArray, inner, outer].flat();
 
   for (const row in box) {
     console.log(box[row]);
