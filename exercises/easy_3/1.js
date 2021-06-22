@@ -45,3 +45,14 @@ crunch('4444abcabccba');              // "4abcabcba"
 crunch('ggggggggggggggg');            // "g"
 crunch('a');                          // "a"
 crunch('');                           // ""
+
+// Further Exploration: RegEx
+function regexCrunch(str) {
+  return str.replace(/(.)\1+/g, '$1');
+}
+
+console.log(regexCrunch('ddaaiillyy ddoouubbllee'));
+console.log(regexCrunch('4444abcabccba'));
+console.log(regexCrunch('ggggggggggggggg'));
+console.log(regexCrunch('a'));
+console.log(regexCrunch(''));
