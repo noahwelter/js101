@@ -46,7 +46,7 @@ function playerChoosesSquare(board) {
   let square;
 
   while (true) {
-    prompt(`Choose a square ${emptySquares(board).join(', ')}:`);
+    prompt(`Choose a square ${joinOr(emptySquares(board))}:`);
     square = readLine.question().trim();
 
     if (emptySquares(board).includes(square)) break;
@@ -94,6 +94,24 @@ function detectWinner(board) {
 
 function someoneWon(board) {
   return !!detectWinner(board);
+}
+
+function joinOr(choices, mainSeparator = ', ' , finalSeparator = 'or') {
+  if (choices.length === 1) return String(choices);
+
+  switch (choices.length) {
+    case 0:
+    case 1:
+      return String(choices);
+    case 2:
+      return `${choices[0]} ${finalSeparator} ${choices[1]}`;
+    default:
+      return choices.reduce((string, choice, index) => {
+        return string + (index === choices.length - 1 ?
+          `${finalSeparator} ${choice}` :
+          `${choice}${mainSeparator}`);
+      }, '');
+  }
 }
 
 while (true) {
