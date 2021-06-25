@@ -97,8 +97,6 @@ function someoneWon(board) {
 }
 
 function joinOr(choices, mainSeparator = ', ' , finalSeparator = 'or') {
-  if (choices.length === 1) return String(choices);
-
   switch (choices.length) {
     case 0:
     case 1:
