@@ -102,7 +102,7 @@ function joinOr(choices, mainSeparator = ', ' , finalSeparator = 'or') {
     case 1:
       return String(choices);
     case 2:
-      return `${choices[0]} ${finalSeparator} ${choices[1]}`;
+      return choices.join(` ${finalSeparator} `);
     default:
       return choices.reduce((string, choice, index) => {
         return string + (index === choices.length - 1 ?
