@@ -1,15 +1,15 @@
-let vehicles = ['car', 'car', 'truck', 'car', 'SUV', 'truck',
-  'motorcycle', 'motorcycle', 'car', 'truck'];
+let vehicles = ['car', 'Car', 'truck', 'car', 'SUV', 'truck',
+  'motorcycle', 'motorcycle', 'car', 'Truck'];
 
 
 function countOccurrences(vehicles) {
   let vehicleObj = {};
 
   vehicles.forEach(vehicle => {
-    if (vehicleObj.hasOwnProperty(vehicle)) {
-      vehicleObj[vehicle] += 1;
+    if (vehicleObj.hasOwnProperty(vehicle.toUpperCase())) {
+      vehicleObj[vehicle.toUpperCase()] += 1;
     } else {
-      vehicleObj[vehicle] = 1;
+      vehicleObj[vehicle.toUpperCase()] = 1;
     }
   });
 
