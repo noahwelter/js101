@@ -143,12 +143,11 @@ do {
   let board = initializeBoard();
   let currentPlayer = 'Player';
 
-  while (true) {
+  do {
     displayBoard(board);
     chooseSquare(board, currentPlayer);
     currentPlayer = alternatePlayer(currentPlayer);
-    if (someoneWon(board) || boardFull(board)) break;
-  }
+  } while (!someoneWon(board) && !boardFull(board));
 
   displayBoard(board);
 
