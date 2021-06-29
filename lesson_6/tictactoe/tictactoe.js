@@ -124,7 +124,22 @@ function alternatePlayer(currentPlayer) {
   return currentPlayer === 'Player' ? 'Computer' : 'Player';
 }
 
-while (true) {
+function askToPlayAgain() {
+  let answer;
+
+  do {
+    prompt('Play again? (y or n)');
+    answer = readLine.question().trim().toLowerCase();
+  } while (!answer.match(/^[yn]$/i));
+
+  switch (answer) {
+    case 'y': return true;
+    case 'n': return false;
+    default: return null;
+  }
+}
+
+do {
   let board = initializeBoard();
   let currentPlayer = 'Player';
 
@@ -143,9 +158,6 @@ while (true) {
     prompt(`It's a tie!`);
   }
 
-  prompt('Play again? (y or n)');
-  let answer = readLine.question().trim().toLowerCase();
-  if (answer !== 'y') break;
-}
+} while (askToPlayAgain());
 
 prompt('Thanks for playing Tic Tac Toe!');
