@@ -22,14 +22,8 @@ function leadingSubstrings(str) {
 
 // map
 function substrings(str) {
-  let subStr = [];
-
-  [...str].map((_, index) => {
-    subStr = subStr.concat(leadingSubstrings(str.slice(index)));
-    return subStr;
-  });
-
-  return console.log(subStr);
+  return ([...str]
+    .flatMap((_, index) => leadingSubstrings(str.slice(index))));
 }
 
 substrings('abcde');
