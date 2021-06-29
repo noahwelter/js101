@@ -112,16 +112,26 @@ function joinOr(choices, mainSeparator = ', ' , finalSeparator = 'or') {
   }
 }
 
+function chooseSquare(board, currentPlayer) {
+  if (currentPlayer === 'Player') {
+    playerChoosesSquare(board);
+  } else {
+    computerChoosesSquare(board);
+  }
+}
+
+function alternatePlayer(currentPlayer) {
+  return currentPlayer === 'Player' ? 'Computer' : 'Player';
+}
+
 while (true) {
   let board = initializeBoard();
+  let currentPlayer = 'Player';
 
   while (true) {
     displayBoard(board);
-
-    playerChoosesSquare(board);
-    if (someoneWon(board) || boardFull(board)) break;
-
-    computerChoosesSquare(board);
+    chooseSquare(board, currentPlayer);
+    currentPlayer = alternatePlayer(currentPlayer);
     if (someoneWon(board) || boardFull(board)) break;
   }
 
