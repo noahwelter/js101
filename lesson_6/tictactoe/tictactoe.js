@@ -4,20 +4,56 @@ const INITIAL_MARKER = ' ';
 const HUMAN_MARKER = 'X';
 const COMPUTER_MARKER = 'O';
 const WINNING_SCORE = 5;
+const WINNING_LINES = [
+  [1, 2, 3], [4, 5, 6], [7, 8, 9],
+  [1, 4, 7], [2, 5, 8], [3, 6, 9],
+  [1, 5, 9], [3, 5, 7]
+];
 
 // #region Gameplay
 function playerChoosesSquare(board) {
-  let square = Number(askPlayer(`Choose a square ${joinOr(emptySquares(board))}:`,
+  let square = Number(askPlayer(`Choose a square: ${joinOr(emptySquares(board))}...`,
     emptySquares(board).join('')));
 
   board[square] = HUMAN_MARKER;
 }
 
 function computerChoosesSquare(board) {
-  let randomIndex = Math.floor(Math.random() * emptySquares(board).length);
+  let square;
 
-  let square = emptySquares(board)[randomIndex];
+  for (let index = 0; index < WINNING_LINES.length; index += 1) {
+    let line = WINNING_LINES[index];
+    square = findAtRiskSquare(line, board, COMPUTER_MARKER);
+    if (square) break;
+  }
+
+  if (!square) {
+    for (let index = 0; index < WINNING_LINES.length; index += 1) {
+      let line = WINNING_LINES[index];
+      square = findAtRiskSquare(line, board, HUMAN_MARKER);
+      if (square) break;
+    }
+  }
+
+  if (!square) {
+    let randomIndex = Math.floor(Math.random() * emptySquares(board).length);
+    square = emptySquares(board)[randomIndex];
+  }
+
   board[square] = COMPUTER_MARKER;
+}
+
+function findAtRiskSquare(line, board, marker) {
+  let threatArr = line.map(square => board[square]);
+
+  if (threatArr.filter(val => val === marker).length === 2) {
+    let openSquare = line.find(square => board[square] === INITIAL_MARKER);
+    if (openSquare !== undefined) {
+      return openSquare;
+    }
+  }
+
+  return null;
 }
 
 function chooseSquare(board, currentPlayer) {
@@ -37,14 +73,8 @@ function boardFull(board) {
 }
 
 function detectWinner(board) {
-  let winningLines = [
-    [1, 2, 3], [4, 5, 6], [7, 8, 9],
-    [1, 4, 7], [2, 5, 8], [3, 6, 9],
-    [1, 5, 9], [3, 5, 7]
-  ];
-
-  for (let line = 0; line < winningLines.length; line += 1) {
-    let [sq1, sq2, sq3] = winningLines[line];
+  for (let line = 0; line < WINNING_LINES.length; line += 1) {
+    let [sq1, sq2, sq3] = WINNING_LINES[line];
 
     if (board[sq1] === HUMAN_MARKER &&
         board[sq2] === HUMAN_MARKER &&
