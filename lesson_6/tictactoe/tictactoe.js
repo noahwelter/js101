@@ -3,6 +3,7 @@ const readLine = require('readline-sync');
 const INITIAL_MARKER = ' ';
 const HUMAN_MARKER = 'X';
 const COMPUTER_MARKER = 'O';
+const FIRST_MOVE = 'choose';  // 'player', 'computer', 'choose', 'random'
 const WINNING_SCORE = 5;
 const WINNING_LINES = [
   [1, 2, 3], [4, 5, 6], [7, 8, 9],
@@ -10,42 +11,159 @@ const WINNING_LINES = [
   [1, 5, 9], [3, 5, 7]
 ];
 
+// #region Display + Board
+function prompt(message) {
+  console.log(`==> ${message}`);
+}
+
+function askPlayer(askPrompt, options = ['y']) {
+  let answer;
+  let errorMessage;
+  let optionsRegex = options.join('|');
+  let regex = new RegExp('^(' + optionsRegex + ')$', 'i');
+
+  do {
+    prompt(errorMessage || askPrompt);
+    answer = readLine.question().trim().toLowerCase();
+    errorMessage = `Invalid entry. Please enter ${joinOr(options)}...`;
+  } while (!answer.match(regex));
+
+  return answer;
+}
+
+function askPlayerBool(askPrompt, trueOptions = ['y'], falseOptions = ['']) {
+  let answer;
+  let errorMessage = '';
+  let optionsRegex = trueOptions.concat(falseOptions).join('|');
+  let regex = new RegExp('^(' + optionsRegex + ')$', 'i');
+
+  do {
+    prompt(errorMessage || askPrompt);
+    answer = readLine.question().trim().toLowerCase();
+    errorMessage = `Invalid entry. Please enter ${joinOr(trueOptions.concat(falseOptions))}...`;
+  } while (!answer.match(regex));
+
+  return trueOptions.includes(answer);
+}
+
+function initializeBoard() {
+  let board = {};
+
+  for (let square = 1; square <= 9; square += 1) {
+    board[String(square)] = INITIAL_MARKER;
+  }
+
+  return board;
+}
+
+function boardFull(board) {
+  return emptySquares(board).length === 0;
+}
+
+function emptySquares(board) {
+  return Object.keys(board).filter(key => board[key] === INITIAL_MARKER);
+}
+
+function displayGreeting() {
+  console.clear();
+  console.log(`Welcome to Tic Tac Toe!`);
+  console.log(`First to ${WINNING_SCORE} points wins.\n`);
+}
+
+function displayHeader(score) {
+  console.clear();
+  console.log(`+-------------+---------------+`);
+  console.log(`|  Player  ${score['player']}  |  ${score['computer']}  Computer  |`);
+  console.log(`|  [${HUMAN_MARKER}]        |     [${COMPUTER_MARKER}]       |`);
+  console.log(`+-------------+---------------+`);
+}
+
+function displayBoard(board) {
+  console.log('');
+  console.log('          |     |');
+  console.log(`       ${board['1']}  |  ${board['2']}  |  ${board['3']}`);
+  console.log('          |     |');
+  console.log('     -----+-----+-----');
+  console.log('          |     |');
+  console.log(`       ${board['4']}  |  ${board['5']}  |  ${board['6']}`);
+  console.log('          |     |');
+  console.log('     -----+-----+-----');
+  console.log('          |     |');
+  console.log(`       ${board['7']}  |  ${board['8']}  |  ${board['9']}`);
+  console.log('          |     |');
+  console.log('');
+}
+
+function displayGameResult(score, board) {
+  displayHeader(score);
+  displayBoard(board);
+
+  if (someoneWonGame(board)) {
+    prompt(`${capitalize(detectWinner(board))} won this game!`);
+  } else {
+    prompt(`It's a tie!`);
+  }
+}
+
+function displayMatchResult(score) {
+  let winner = detectMatchWinner(score);
+  prompt(`${capitalize(winner)} won the match ${score[winner]} to ${score[alternatePlayer(winner)]}!`);
+}
+// #endregion
+
 // #region Gameplay
+function whoGoesFirst(FIRST_MOVE) {
+  let question = `Who is going first? Enter player (p) or computer (c)...'`;
+  let options = ['p', 'player', 'c', 'computer'];
+  switch (FIRST_MOVE) {
+    case 'choose': return shortNameToFullName(askPlayer(question, options));
+    case 'random': return Math.random() >= 0.5 ? 'player' : 'computer';
+    default: return FIRST_MOVE;
+  }
+}
+
+function alternatePlayer(currentPlayer) {
+  return currentPlayer === 'player' ? 'computer' : 'player';
+}
+
 function playerChoosesSquare(board) {
-  let square = Number(askPlayer(`Choose a square: ${joinOr(emptySquares(board))}...`,
-    emptySquares(board).join('')));
+  let question = `Choose a square: ${joinOr(emptySquares(board))}...`;
+  let options = emptySquares(board);
+  let square = Number(askPlayer(question, options));
 
   board[square] = HUMAN_MARKER;
 }
 
 function computerChoosesSquare(board) {
-  let square = selectBestMove(board, COMPUTER_MARKER);
-
-  if (!square) square = selectBestMove(board, HUMAN_MARKER);
-
-  if (!square && board[5] === INITIAL_MARKER) square = 5;
-
-  if (!square) {
-    let randomIndex = Math.floor(Math.random() * emptySquares(board).length);
-    square = emptySquares(board)[randomIndex];
-  }
+  let square = selectMoveBasedOn(board, COMPUTER_MARKER);
+  if (!square) square = selectMoveBasedOn(board, HUMAN_MARKER);
+  if (!square) square = selectCenterSquare(board);
+  if (!square) square = selectRandomSquare(board);
 
   board[square] = COMPUTER_MARKER;
 }
 
-function selectBestMove(board, marker) {
+function chooseSquare(board, currentPlayer) {
+  if (currentPlayer === 'player') {
+    playerChoosesSquare(board);
+  } else {
+    computerChoosesSquare(board);
+  }
+}
+
+function selectMoveBasedOn(board, marker) {
   let square = null;
 
   for (let index = 0; index < WINNING_LINES.length; index += 1) {
     let line = WINNING_LINES[index];
-    square = findAtRiskSquare(line, board, marker);
+    square = findBestSquare(line, board, marker);
     if (square) break;
   }
 
   return square;
 }
 
-function findAtRiskSquare(line, board, marker) {
+function findBestSquare(line, board, marker) {
   let threatArr = line.map(square => board[square]);
 
   if (threatArr.filter(val => val === marker).length === 2) {
@@ -58,20 +176,14 @@ function findAtRiskSquare(line, board, marker) {
   return null;
 }
 
-function chooseSquare(board, currentPlayer) {
-  if (currentPlayer === 'Player') {
-    playerChoosesSquare(board);
-  } else {
-    computerChoosesSquare(board);
-  }
+function selectCenterSquare(board) {
+  const CENTER_SQUARE = 5;
+  return (board[CENTER_SQUARE] === INITIAL_MARKER) ? CENTER_SQUARE : null;
 }
 
-function alternatePlayer(currentPlayer) {
-  return currentPlayer === 'Player' ? 'Computer' : 'Player';
-}
-
-function boardFull(board) {
-  return emptySquares(board).length === 0;
+function selectRandomSquare(board) {
+  let randomIndex = Math.floor(Math.random() * emptySquares(board).length);
+  return emptySquares(board)[randomIndex];
 }
 
 function detectWinner(board) {
@@ -81,11 +193,11 @@ function detectWinner(board) {
     if (board[sq1] === HUMAN_MARKER &&
         board[sq2] === HUMAN_MARKER &&
         board[sq3] === HUMAN_MARKER) {
-      return 'Player';
+      return 'player';
     } else if (board[sq1] === COMPUTER_MARKER &&
         board[sq2] === COMPUTER_MARKER &&
         board[sq3] === COMPUTER_MARKER) {
-      return 'Computer';
+      return 'computer';
     }
   }
 
@@ -96,7 +208,7 @@ function detectMatchWinner(score) {
   return Object.keys(score)[Object.values(score).indexOf(WINNING_SCORE)];
 }
 
-function someoneWon(board) {
+function someoneWonGame(board) {
   return !!detectWinner(board);
 }
 
@@ -104,10 +216,31 @@ function someoneWonMatch(score) {
   return !!detectMatchWinner(score);
 }
 
-function updateScore(board, score) {
-  if (someoneWon(board)) {
+function updateScore(score, board) {
+  if (someoneWonGame(board)) {
     score[detectWinner(board)] += 1;
   }
+}
+
+function playGame(score, board, currentPlayer) {
+  do {
+    displayHeader(score);
+    displayBoard(board);
+    chooseSquare(board, currentPlayer);
+    currentPlayer = alternatePlayer(currentPlayer);
+  } while (!someoneWonGame(board) && !boardFull(board));
+
+  updateScore(score, board);
+}
+
+function playMatch(score, firstPlayer) {
+  do {
+    let board = initializeBoard();
+    playGame(score, board, firstPlayer);
+    displayGameResult(score, board);
+    firstPlayer = alternatePlayer(firstPlayer);
+    askPlayer(`Enter c to continue...`, ['c']);
+  } while (!someoneWonMatch(score));
 }
 // #endregion
 
@@ -127,118 +260,29 @@ function joinOr(choices, mainSeparator = ', ' , finalSeparator = 'or') {
       }, '');
   }
 }
-// #endregion
 
-// #region Display + Board
-function prompt(message) {
-  console.log(`==> ${message}`);
+function capitalize(word) {
+  return word.slice(0, 1).toUpperCase() + word.slice(1).toLowerCase();
 }
 
-function askPlayer(askPrompt, options = 'y') {
-  let answer;
-  let regex = new RegExp('^[' + options + ']$', 'i');
-
-  do {
-    prompt(askPrompt);
-    answer = readLine.question().trim().toLowerCase();
-  } while (!answer.match(regex));
-
-  return answer;
-}
-
-function askPlayerBoolean(askPrompt, trueOptions = 'y', falseOptions = '') {
-  let answer;
-  let regex = new RegExp('^[' + trueOptions + falseOptions + ']$', 'i');
-
-  do {
-    prompt(askPrompt);
-    answer = readLine.question().trim().toLowerCase();
-  } while (!answer.match(regex));
-
-  return trueOptions.includes(answer);
-}
-
-function initializeBoard() {
-  let board = {};
-
-  for (let square = 1; square <= 9; square += 1) {
-    board[String(square)] = INITIAL_MARKER;
-  }
-
-  return board;
-}
-
-function emptySquares(board) {
-  return Object.keys(board).filter(key => board[key] === INITIAL_MARKER);
-}
-
-function displayHeader(score) {
-  console.clear();
-  console.log(`+----------+---------------+`);
-  console.log(`|  You  ${score['Player']}  |   ${score['Computer']} Computer  |`);
-  console.log(`|  [${HUMAN_MARKER}]     |     [${COMPUTER_MARKER}]       |`);
-  console.log(`+----------+---------------+`);
-}
-
-function displayBoard(board) {
-  console.log('');
-  console.log('     |     |');
-  console.log(`  ${board['1']}  |  ${board['2']}  |  ${board['3']}`);
-  console.log('     |     |');
-  console.log('-----+-----+-----');
-  console.log('     |     |');
-  console.log(`  ${board['4']}  |  ${board['5']}  |  ${board['6']}`);
-  console.log('     |     |');
-  console.log('-----+-----+-----');
-  console.log('     |     |');
-  console.log(`  ${board['7']}  |  ${board['8']}  |  ${board['9']}`);
-  console.log('     |     |');
-  console.log('');
-}
-
-function displayGameResult(board) {
-  if (someoneWon(board)) {
-    prompt(`${detectWinner(board)} won this game!`);
-  } else {
-    prompt(`It's a tie!`);
-  }
-}
-
-function displayMatchResults(score) {
-  let winner = detectMatchWinner(score);
-  prompt(`${winner} won the match ${score[winner]} to ${score[alternatePlayer(winner)]}!`);
+function shortNameToFullName(name) {
+  return (name[0] === 'p') ? 'player' : 'computer';
 }
 // #endregion
+
+displayGreeting();
 
 do {
   let score = {
-    Player: 0,
-    Computer: 0
+    player: 0,
+    computer: 0
   };
 
-  do {
-    let board = initializeBoard();
-    let currentPlayer = 'Player';
+  let firstPlayer = whoGoesFirst(FIRST_MOVE);
 
-    do {
-      displayHeader(score);
-      displayBoard(board);
-      chooseSquare(board, currentPlayer);
-      currentPlayer = alternatePlayer(currentPlayer);
-    } while (!someoneWon(board) && !boardFull(board));
+  playMatch(score, firstPlayer);
+  displayMatchResult(score);
 
-    updateScore(board, score);
-
-    displayHeader(score);
-    displayBoard(board);
-    displayGameResult(board);
-
-    if (someoneWonMatch(score)) {
-      displayMatchResults(score);
-    } else {
-      askPlayer(`Press 'c' to continue...`, 'c');
-    }
-  } while (!someoneWonMatch(score));
-} while (askPlayerBoolean(`Play again? (y or n)`, 'y', 'n'));
+} while (askPlayerBool(`Play again? Enter y or n...`, ['y'], ['n']));
 
 prompt('Thanks for playing Tic Tac Toe!');
