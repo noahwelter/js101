@@ -19,21 +19,11 @@ function playerChoosesSquare(board) {
 }
 
 function computerChoosesSquare(board) {
-  let square;
+  let square = selectBestMove(board, COMPUTER_MARKER);
 
-  for (let index = 0; index < WINNING_LINES.length; index += 1) {
-    let line = WINNING_LINES[index];
-    square = findAtRiskSquare(line, board, COMPUTER_MARKER);
-    if (square) break;
-  }
+  if (!square) square = selectBestMove(board, HUMAN_MARKER);
 
-  if (!square) {
-    for (let index = 0; index < WINNING_LINES.length; index += 1) {
-      let line = WINNING_LINES[index];
-      square = findAtRiskSquare(line, board, HUMAN_MARKER);
-      if (square) break;
-    }
-  }
+  if (!square && board[5] === INITIAL_MARKER) square = 5;
 
   if (!square) {
     let randomIndex = Math.floor(Math.random() * emptySquares(board).length);
@@ -41,6 +31,18 @@ function computerChoosesSquare(board) {
   }
 
   board[square] = COMPUTER_MARKER;
+}
+
+function selectBestMove(board, marker) {
+  let square = null;
+
+  for (let index = 0; index < WINNING_LINES.length; index += 1) {
+    let line = WINNING_LINES[index];
+    square = findAtRiskSquare(line, board, marker);
+    if (square) break;
+  }
+
+  return square;
 }
 
 function findAtRiskSquare(line, board, marker) {
