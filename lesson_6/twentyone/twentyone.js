@@ -214,7 +214,7 @@ function dealCard(deck, recipient) {
 }
 
 function dealHands(deck, player, dealer) {
-  for (let card = 1; card <= INITIAL_CARDS; card += 1) {
+  for (let cardNumber = 1; cardNumber <= INITIAL_CARDS; cardNumber += 1) {
     dealCard(deck, player);
     dealCard(deck, dealer);
   }
@@ -235,7 +235,7 @@ function playerTurn(deck, player, dealer) {
 }
 
 function dealerTurn(deck, dealer) {
-  while (dealer.total <= DEALER_STAY_VALUE) {
+  while (dealer.total < DEALER_STAY_VALUE) {
     dealCard(deck, dealer);
     dealer.total = getTotal(dealer.hand);
   }
