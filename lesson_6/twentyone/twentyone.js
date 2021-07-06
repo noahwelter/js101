@@ -357,7 +357,7 @@ do {
   playMatch(player, dealer);
   displayMatchResult(player, dealer);
 
-} while (askPlayerBool(`Play again? Enter y or n...`, ['y'], ['n']));
+} while (askPlayerBool(`Play again? Enter y or n...`, ['y', 'yes'], ['n', 'no']));
 
 prompt(`Thanks for playing 21!\n`);
 // #endregion
