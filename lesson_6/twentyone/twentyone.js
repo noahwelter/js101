@@ -288,8 +288,8 @@ function playMatch(player, dealer) {
     playGame(player, dealer);
     displayTable(player, dealer);
     displayGameResult(detectGameWinner(player, dealer));
-    askPlayerBool(`Enter c to continue...`, ['c']);
-  } while (!detectMatchResult(player, dealer));
+  } while (!detectMatchResult(player, dealer) &&
+    askPlayerBool(`Enter c to continue or q to quit...`, ['c'], ['q', 'quit']));
 }
 // #endregion
 
@@ -334,7 +334,9 @@ do {
   let dealer = initializeGamePlayer('Dealer');
 
   playMatch(player, dealer);
-  displayMatchResult(player, dealer);
+  if (detectMatchResult(player, dealer)) {
+    displayMatchResult(player, dealer);
+  }
 
 } while (askPlayerBool(`Play again? Enter y or n...`, ['y', 'yes'], ['n', 'no']));
 
