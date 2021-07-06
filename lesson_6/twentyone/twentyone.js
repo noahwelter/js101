@@ -26,7 +26,7 @@ function displayGreeting() {
   console.clear();
   prompt(`Welcome to 21!`);
   prompt(`First to ${WINNING_GAMES} games wins.\n`);
-  askPlayer(`Enter c to continue...`, ['c']);
+  askPlayerBool(`Enter c to continue...`, ['c']);
 }
 
 function displayHeader(player, dealer) {
@@ -287,28 +287,13 @@ function playMatch(player, dealer) {
     playGame(player, dealer);
     displayTable(player, dealer);
     displayGameResult(detectGameWinner(player, dealer));
-    askPlayer(`Enter c to continue...`, ['c']);
+    askPlayerBool(`Enter c to continue...`, ['c']);
   } while (!detectMatchWinner(player, dealer));
 }
 // #endregion
 
 // #region General
-function askPlayer(askPrompt, options = ['y']) {
-  let answer;
-  let errorMessage;
-  let optionsRegex = options.join('|');
-  let regex = new RegExp('^(' + optionsRegex + ')$', 'i');
-
-  do {
-    prompt(errorMessage || askPrompt);
-    answer = readLine.question().trim().toLowerCase();
-    errorMessage = `Invalid entry. Please enter ${joinOr(options)}...`;
-  } while (!answer.match(regex));
-
-  return answer;
-}
-
-function askPlayerBool(askPrompt, trueOptions = ['y'], falseOptions = ['']) {
+function askPlayerBool(askPrompt, trueOptions = ['y'], falseOptions = []) {
   let answer;
   let errorMessage;
   let optionsRegex = trueOptions.concat(falseOptions).join('|');
