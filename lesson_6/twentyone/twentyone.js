@@ -14,7 +14,7 @@ const ACE_VALUE_MAX = 11;
 
 const DEALER_STAY_VALUE = 17;
 const WINNING_SCORE = 21;
-const MATCHES = 5;
+const WINNING_GAMES = 5;
 
 
 // #region Display
@@ -25,7 +25,7 @@ function prompt(message) {
 function displayGreeting() {
   console.clear();
   prompt(`Welcome to 21!`);
-  prompt(`First to ${MATCHES} games wins.\n`);
+  prompt(`First to ${WINNING_GAMES} games wins.\n`);
   askPlayer(`Enter c to continue...`, ['c']);
 }
 
@@ -195,9 +195,9 @@ function detectGameWinner(player, dealer) {
 }
 
 function detectMatchWinner(player, dealer) {
-  if (player.games === MATCHES) {
+  if (player.games === WINNING_GAMES) {
     return player;
-  } else if (dealer.games === MATCHES) {
+  } else if (dealer.games === WINNING_GAMES) {
     return dealer;
   }
 
