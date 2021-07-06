@@ -1,14 +1,13 @@
 const readLine = require('readline-sync');
 
 const FIRST_CARD = 0;
-const MYSTERY_CARD = ['', '?'];
+const MYSTERY_CARD = { suit: '', value: '?', points: '?' };
 const INITIAL_CARDS = 2;
 
 const CARD_WIDTH = 9;
 const CARD_PAD = 1;
 const BORDER_WIDTH = 2;
 
-const FACE_VALUE = 10;
 const ACE_VALUE_MIN = 1;
 const ACE_VALUE_MAX = 11;
 
@@ -38,14 +37,14 @@ function displayHeader(player, dealer) {
   );
 }
 
-function getCardDisplayString([suit, value]) {
+function getCardDisplayString(card) {
   return [
     `╭${''.padStart(CARD_WIDTH - BORDER_WIDTH, '─')}╮`,
-    `│${value.padEnd(CARD_WIDTH - BORDER_WIDTH)}│`,
-    `│${suit.padEnd(CARD_WIDTH - BORDER_WIDTH)}│`,
+    `│${String(card.value).padEnd(CARD_WIDTH - BORDER_WIDTH)}│`,
+    `│${String(card.suit).padEnd(CARD_WIDTH - BORDER_WIDTH)}│`,
     `│${''.padStart(CARD_WIDTH - BORDER_WIDTH)}│`,
-    `│${suit.padStart(CARD_WIDTH - BORDER_WIDTH)}│`,
-    `│${value.padStart(CARD_WIDTH - BORDER_WIDTH)}│`,
+    `│${String(card.suit).padStart(CARD_WIDTH - BORDER_WIDTH)}│`,
+    `│${String(card.value).padStart(CARD_WIDTH - BORDER_WIDTH)}│`,
     `╰${''.padStart(CARD_WIDTH - BORDER_WIDTH, '─')}╯`
   ];
 }
@@ -132,11 +131,12 @@ function initializeDeck() {
   const SUIT_LIST = ['♦', '♣', '♥', '♠'];
   const VALUE_LIST = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q',
     'K', 'A'];
+  const POINT_LIST = [2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 11];
 
   let deck = [];
   SUIT_LIST.forEach(suit => {
-    VALUE_LIST.forEach(value => {
-      deck.push([suit, value]);
+    VALUE_LIST.forEach((value, index) => {
+      deck.push({ suit: suit, value: value, points: POINT_LIST[index] });
     });
   });
 
@@ -162,24 +162,13 @@ function resetGameWinner(player, dealer) {
   dealer.won = false;
 }
 
-function getCardValue(value) {
-  switch (value) {
-    case 'J':
-    case 'Q':
-    case 'K': return FACE_VALUE;
-    case 'A': return ACE_VALUE_MAX;
-    default:
-      return Number(value);
-  }
-}
-
 function getTotal(hand) {
-  let totalWithoutAces = hand.filter(([_, value]) => value !== 'A')
-    .reduce((acc, [_, value]) => {
-      return acc + getCardValue(value);
+  let totalWithoutAces = hand.filter(card => card.value !== 'A')
+    .reduce((acc, card) => {
+      return acc + card.points;
     }, 0);
 
-  let totalAces = hand.filter(([_, value]) => value === 'A')
+  let totalAces = hand.filter(card => card.value === 'A')
     .reduce(acc => {
       let totalMax = totalWithoutAces + acc + ACE_VALUE_MAX;
       return acc + (totalMax <= WINNING_SCORE ? ACE_VALUE_MAX : ACE_VALUE_MIN);
