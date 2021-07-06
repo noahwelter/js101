@@ -32,21 +32,21 @@ function displayGreeting() {
 function displayHeader(player, dealer) {
   console.clear();
   console.log(
-    `┌──────────┬─────────────┐\n` +
+    `╭──────────┬─────────────╮\n` +
     `│  ${player.name}  ${player.games}  │  ${dealer.games}  ${dealer.name}  │\n` +
-    `└──────────┴─────────────┘\n`
+    `╰──────────┴─────────────╯\n`
   );
 }
 
 function getCardDisplayString([suit, value]) {
   return [
-    `┌${''.padStart(CARD_WIDTH - BORDER_WIDTH, '─')}┐`,
+    `╭${''.padStart(CARD_WIDTH - BORDER_WIDTH, '─')}╮`,
     `│${value.padEnd(CARD_WIDTH - BORDER_WIDTH)}│`,
     `│${suit.padEnd(CARD_WIDTH - BORDER_WIDTH)}│`,
     `│${''.padStart(CARD_WIDTH - BORDER_WIDTH)}│`,
     `│${suit.padStart(CARD_WIDTH - BORDER_WIDTH)}│`,
     `│${value.padStart(CARD_WIDTH - BORDER_WIDTH)}│`,
-    `└${''.padStart(CARD_WIDTH - BORDER_WIDTH, '─')}┘`
+    `╰${''.padStart(CARD_WIDTH - BORDER_WIDTH, '─')}╯`
   ];
 }
 
@@ -103,7 +103,16 @@ function displayMatchResult(player, dealer) {
   let matchWinner = detectMatchWinner(player, dealer);
   let matchLoser = otherPlayer(matchWinner, player, dealer);
 
-  prompt(`${matchWinner.name} won the match ${matchWinner.games} to ${matchLoser.games}!`);
+  displayHeader(player, dealer);
+  displayTable(player, dealer);
+
+  let mainText = `${matchWinner.name} won the match ${matchWinner.games} to ${matchLoser.games}!`;
+  let displayText = (
+    `╭─${'─'.repeat(mainText.length)}─╮\n` +
+    `│ ${mainText} │\n` +
+    `╰─${'─'.repeat(mainText.length)}─╯\n`
+  );
+  console.log(displayText);
 }
 // #endregion
 
