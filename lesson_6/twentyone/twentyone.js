@@ -100,8 +100,9 @@ function displayGameResult(winner) {
 }
 
 function displayMatchResult(player, dealer) {
-  let matchWinner = detectMatchWinner(player, dealer);
-  let matchLoser = otherPlayer(matchWinner, player, dealer);
+  let matchResult = detectMatchResult(player, dealer);
+  let matchWinner = matchResult.winner;
+  let matchLoser = matchResult.loser;
 
   displayHeader(player, dealer);
   displayTable(player, dealer);
@@ -213,11 +214,11 @@ function detectGameWinner(player, dealer) {
   return null;
 }
 
-function detectMatchWinner(player, dealer) {
+function detectMatchResult(player, dealer) {
   if (player.games === WINNING_GAMES) {
-    return player;
+    return { winner: player, loser: dealer };
   } else if (dealer.games === WINNING_GAMES) {
-    return dealer;
+    return { winner: dealer, loser: player };
   }
 
   return null;
@@ -288,7 +289,7 @@ function playMatch(player, dealer) {
     displayTable(player, dealer);
     displayGameResult(detectGameWinner(player, dealer));
     askPlayerBool(`Enter c to continue...`, ['c']);
-  } while (!detectMatchWinner(player, dealer));
+  } while (!detectMatchResult(player, dealer));
 }
 // #endregion
 
@@ -322,10 +323,6 @@ function joinOr(choices, mainSeparator = ', ' , finalSeparator = 'or') {
           `${choice}${mainSeparator}`);
       }, '');
   }
-}
-
-function otherPlayer(initialPlayer, player, dealer) {
-  return (initialPlayer === player ? dealer : player);
 }
 // #endregion
 
