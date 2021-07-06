@@ -117,6 +117,16 @@ function displayMatchResult(player, dealer) {
 // #endregion
 
 // #region Data
+function initializeGamePlayer(playerName) {
+  return {
+    name: playerName,
+    hand: [],
+    total: 0,
+    won: false,
+    games: 0
+  };
+}
+
 function initializeDeck() {
   const SUIT_LIST = ['♦', '♣', '♥', '♠'];
   const VALUE_LIST = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q',
@@ -338,21 +348,8 @@ function otherPlayer(initialPlayer, player, dealer) {
 displayGreeting();
 
 do {
-  let player = {
-    name: 'You',
-    hand: [],
-    total: 0,
-    won: false,
-    games: 0
-  };
-
-  let dealer = {
-    name: 'Dealer',
-    hand: [],
-    total: 0,
-    won: false,
-    games: 0
-  };
+  let player = initializeGamePlayer('You');
+  let dealer = initializeGamePlayer('Dealer');
 
   playMatch(player, dealer);
   displayMatchResult(player, dealer);
